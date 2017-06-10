@@ -23,48 +23,56 @@ public class OpiskelijaDao implements Dao<Opiskelija, Integer> {
 
     @Override
     public Opiskelija findOne(Integer key) throws SQLException {
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija WHERE id = ?");
-        stmt.setObject(1, key);
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija WHERE id = ?");
+            stmt.setInt(1, key);
 
-        ResultSet rs = stmt.executeQuery();
-        boolean hasOne = rs.next();
-        if (!hasOne) {
+            ResultSet rs = stmt.executeQuery();
+
+            boolean hasOne = rs.next();
+            if (!hasOne) {
+                return null;
+            }
+
+            Integer id = rs.getInt("id");
+            String nimi = rs.getString("nimi");
+
+            Opiskelija o = new Opiskelija(id, nimi);
+
+            rs.close();
+            stmt.close();
+            connection.close();
+
+            return o;
+        } catch (Exception e) {
             return null;
         }
 
-        Integer id = rs.getInt("id");
-        String nimi = rs.getString("nimi");
-
-        Opiskelija o = new Opiskelija(id, nimi);
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
-        return o;
     }
 
     @Override
     public List<Opiskelija> findAll() throws SQLException {
 
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija");
+        try (Connection connection = database.getConnection()) {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija");
 
-        ResultSet rs = stmt.executeQuery();
-        List<Opiskelija> opiskelijat = new ArrayList<>();
-        while (rs.next()) {
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("nimi");
+            ResultSet rs = stmt.executeQuery();
+            List<Opiskelija> opiskelijat = new ArrayList<>();
+            while (rs.next()) {
+                Integer id = rs.getInt("id");
+                String nimi = rs.getString("nimi");
 
-            opiskelijat.add(new Opiskelija(id, nimi));
+                opiskelijat.add(new Opiskelija(id, nimi));
+            }
+
+            rs.close();
+            stmt.close();
+            connection.close();
+
+            return opiskelijat;
+        } catch (Exception e) {
+            return null;
         }
-
-        rs.close();
-        stmt.close();
-        connection.close();
-
-        return opiskelijat;
     }
 
     @Override
