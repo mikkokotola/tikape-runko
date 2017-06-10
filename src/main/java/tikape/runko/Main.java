@@ -8,10 +8,14 @@ import tikape.runko.database.Database;
 import tikape.runko.database.OpiskelijaDao;
 
 public class Main {
-    
+
     // Mikon testausta koodin muokkaamisesta ja Githubin käytöstä.
-    
     public static void main(String[] args) throws Exception {
+        // Portin määritys Herokua varten, lisätty TiKaPe-materiaalin ohjeen mukaan.
+        if (System.getenv("PORT") != null) {
+            port(Integer.valueOf(System.getenv("PORT")));
+        }
+
         Database database = new Database("jdbc:sqlite:opiskelijat.db");
         database.init();
 
