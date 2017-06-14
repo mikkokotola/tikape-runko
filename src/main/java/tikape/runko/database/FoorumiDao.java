@@ -19,6 +19,7 @@ public class FoorumiDao {
         this.database = database;
     }
 
+    // EI VIELÄ TOIMI
     public Viesti findOneViesti(Integer key) throws SQLException {
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
@@ -30,9 +31,11 @@ public class FoorumiDao {
             if (!hasOne) {
                 return null;
             }
-            Integer id = rs.getInt("id");
-            Keskustelu keskustelu = new Keskustelu(rs.getInt("id"), new Keskustelualue(rs.getInt("id"), rs.getString("nimi")), rs.getString("nimi"));
+            Integer id = rs.getInt("id_viesti");
+// ONGELMIA: tämä keskusteluun ja keskustelualueeseen linkittäminen ei nyt mene oikein (käytetään väärää id:tä).
+            Keskustelu keskustelu = new Keskustelu(rs.getInt("id_viesti"), new Keskustelualue(rs.getInt("id_viesti"), rs.getString("nimi")), rs.getString("nimi"));
             String kayttaja = rs.getString("kayttaja");
+// Otsikko poistettu turhana.
 //            String otsikko = rs.getString("otsikko");
             String runko = rs.getString("runko");
             Timestamp viestinaika = rs.getTimestamp("viestinaika");
@@ -50,20 +53,25 @@ public class FoorumiDao {
 
     }
 
-    public List<Viesti> findAllViesti() throws SQLException {
+    // Tämä metodi palauttaa kaikki parametrina annettuun keskusteluun kuuluvat viestit.
+    public List<Viesti> findAllViesti(Keskustelu haettavakeskustelu) throws SQLException {
 
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti, Keskustelu, Keskustelualue WHERE Viesti.keskustelu = ? AND Viesti.keskustelu = Keskustelu.id_keskustelu AND Keskustelu.keskustelualue = Keskustelualue.id_keskustelualue");
 
+            stmt.setInt(1, haettavakeskustelu.getId());
+            
             ResultSet rs = stmt.executeQuery();
             List<Viesti> viestit = new ArrayList<>();
             while (rs.next()) {
-                Integer id = rs.getInt("id");
-                Keskustelu keskustelu = new Keskustelu(rs.getInt("id"), new Keskustelualue(rs.getInt("id"), rs.getString("nimi")), rs.getString("nimi"));
-                String kayttaja = rs.getString("kayttaja");
+                Integer id = rs.getInt("Viesti.id_viesti");
+                if ()
+                Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("Keskustelualue.id_keskustelualue"), rs.getString("Keskustelualue.nimi"))
+                Keskustelu keskustelu = new Keskustelu(rs.getInt("Keskustelu.id_keskustelu"), keskustelualue, rs.getString("Keskustelu.nimi"));
+                String kayttaja = rs.getString("Viesti.kayttaja");
 //                String otsikko = rs.getString("otsikko");
-                String runko = rs.getString("runko");
-                Timestamp viestinaika = rs.getTimestamp("viestinaika");
+                String runko = rs.getString("Viesti.runko");
+                Timestamp viestinaika = rs.getTimestamp("Viesti.viestinaika");
 
                 viestit.add(new Viesti(id, keskustelu, kayttaja, runko, viestinaika));
             }
