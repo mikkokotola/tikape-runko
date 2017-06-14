@@ -1,11 +1,14 @@
 package tikape.runko;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import spark.ModelAndView;
 import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.Database;
-import tikape.runko.database.OpiskelijaDao;
+import tikape.runko.database.FoorumiDao;
+import tikape.runko.domain.Keskustelualue;
 
 public class Main {
 
@@ -17,7 +20,7 @@ public class Main {
         }
         
         // käytetään oletuksena paikallista sqlite-tietokantaa
-        String jdbcOsoite = "jdbc:sqlite:opiskelijat.db";
+        String jdbcOsoite = "jdbc:sqlite:foorumi.db";
         // jos heroku antaa käyttöömme tietokantaosoitteen, otetaan se käyttöön
         if (System.getenv("DATABASE_URL") != null) {
             jdbcOsoite = System.getenv("DATABASE_URL");
@@ -27,7 +30,8 @@ public class Main {
 
         db.init();
 
-        OpiskelijaDao opiskelijaDao = new OpiskelijaDao(db);
+        FoorumiDao foorumiDao = new FoorumiDao(db);
+        List<Keskustelualue> aluelista = new ArrayList<>();
 
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
@@ -36,18 +40,18 @@ public class Main {
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
 
-        get("/opiskelijat", (req, res) -> {
+        get("/viestit", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("opiskelijat", opiskelijaDao.findAll());
+            map.put("viestit", foorumiDao.findAllViesti());
 
             return new ModelAndView(map, "opiskelijat");
         }, new ThymeleafTemplateEngine());
 
-        get("/opiskelijat/:id", (req, res) -> {
+        get("/viestit/:id", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("opiskelija", opiskelijaDao.findOne(Integer.parseInt(req.params("id"))));
+            map.put("viesti", foorumiDao.findOneViesti(Integer.parseInt(req.params("id"))));
 
-            return new ModelAndView(map, "opiskelija");
+            return new ModelAndView(map, "viesti");
         }, new ThymeleafTemplateEngine());
     }
 }
