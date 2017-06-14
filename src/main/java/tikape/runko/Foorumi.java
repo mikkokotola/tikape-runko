@@ -97,7 +97,7 @@ public class Foorumi {
         get(
                 "/", (req, res) -> {
                     HashMap map = new HashMap<>();
-                    map.put("viesti", this.aluelista); // KESKEN, muutettava dao-metodiksi. Vai tarvitseeko noita tallentaa ollenkaan?
+                    map.put("alueet", this.aluelista); // KESKEN, muutettava dao-metodiksi. Vai tarvitseeko noita tallentaa ollenkaan?
 
                     return new ModelAndView(map, "index");
                 },

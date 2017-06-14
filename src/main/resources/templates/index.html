@@ -2,15 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>JaJaMiPe-Keskustelufoorumi</title>
         <meta charset="utf-8" />
     </head>
 
     <body>
-        <h1>Heippa vaan!</h1>
+        <h1>JaJaMiPe-Keskustelufoorumi</h1>
 
-        <p>Ja .. <span th:text="${viesti}">jotain?</span></p>
+        <ol>
+            <li th:each="alue: ${alueet}">
+                <span th:text="${alue.nimi}">Keskustelualueen nimi</span> <a th:href="${'/' + alue.id}">Linkki alueen sivulle</a>
+            </li>
+        </ol>
 
-        <p><a href="/opiskelijat">Tästä opiskelijalistaukseen.</a></p>
+        
     </body>
 </html>
