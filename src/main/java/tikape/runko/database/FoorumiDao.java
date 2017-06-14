@@ -54,19 +54,20 @@ public class FoorumiDao {
     }
 
     // Tämä metodi palauttaa kaikki parametrina annettuun keskusteluun kuuluvat viestit.
-    public List<Viesti> findAllViesti(Keskustelu haettavakeskustelu) throws SQLException {
+    public List<Viesti> findAllViesti(int haettavakeskustelu) throws SQLException {
 
         try (Connection connection = database.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti, Keskustelu, Keskustelualue WHERE Viesti.keskustelu = ? AND Viesti.keskustelu = Keskustelu.id_keskustelu AND Keskustelu.keskustelualue = Keskustelualue.id_keskustelualue");
 
-            stmt.setInt(1, haettavakeskustelu.getId());
+            stmt.setInt(1, haettavakeskustelu);
             
             ResultSet rs = stmt.executeQuery();
             List<Viesti> viestit = new ArrayList<>();
             while (rs.next()) {
                 Integer id = rs.getInt("Viesti.id_viesti");
-                if ()
-                Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("Keskustelualue.id_keskustelualue"), rs.getString("Keskustelualue.nimi"))
+                
+                // KESKEN, miten käsitellään jo olemassa olevat keskustelualueet (samasta hakuerästä)
+                Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("Keskustelualue.id_keskustelualue"), rs.getString("Keskustelualue.nimi"));
                 Keskustelu keskustelu = new Keskustelu(rs.getInt("Keskustelu.id_keskustelu"), keskustelualue, rs.getString("Keskustelu.nimi"));
                 String kayttaja = rs.getString("Viesti.kayttaja");
 //                String otsikko = rs.getString("otsikko");
