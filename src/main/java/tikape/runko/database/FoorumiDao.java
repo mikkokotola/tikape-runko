@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import tikape.runko.domain.*;
+import tikape.runko.Foorumi;
 
 public class FoorumiDao {
 
@@ -141,10 +142,10 @@ public class FoorumiDao {
 
     }
 
-    public Keskustelualue findOneKeskustelualue(Integer key) throws SQLException {
+    public Keskustelualue findOneKeskustelualue(Integer keskustelualue) throws SQLException {
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
-            stmt.setInt(1, key);
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id = ?");
+            stmt.setInt(1, keskustelualue);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -168,19 +169,35 @@ public class FoorumiDao {
 
     }
 
-    public List<Keskustelu> findAllKeskustelu() throws SQLException {
+    public List<Keskustelu> findAllAlueenKeskustelut(Foorumi foorumi, String alueenId) throws SQLException {
 
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu, Keskustelualue WHERE Keskustelu.keskustelualue = ? AND Keskustelu.keskustelualue = Keskustelualue.id_keskustelualue");
 
             ResultSet rs = stmt.executeQuery();
             List<Keskustelu> k = new ArrayList<>();
+            
             while (rs.next()) {
-                Integer id = rs.getInt("id");
-                String nimi = rs.getString("kayttaja");
-                Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("id"), rs.getString("nimi"));
-
-                k.add(new Keskustelu(id, keskustelualue, nimi));
+                Integer id = rs.getInt("id_keskustelu");
+                String nimi = rs.getString("nimi_keskustelu");
+                Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("Keskustelualue.id_keskustelualue"), rs.getString("Keskustelualue.nimi_keskustelualue"));
+                
+                // Jos alue oli jo aluelistalla, haetaan oikean alueen viite
+                boolean alueLisattiinListalle = foorumi.addAlue(keskustelualue);
+                if (!alueLisattiinListalle) {
+                    List<Keskustelualue> lista = foorumi.getAluelista();
+                    int listanIndex = 0;
+                    for (int i = 0; i < lista.size(); i++) {
+                        if (lista.get(i).getId() == Integer.parseInt(alueenId)) {
+                            listanIndex = i;
+                        }
+                    }
+                    keskustelualue = lista.get(listanIndex);
+                    
+                }
+                Keskustelu lisattavaKeskustelu = new Keskustelu(id, keskustelualue, nimi);
+                k.add(lisattavaKeskustelu);
+                keskustelualue.addKeskustelu(lisattavaKeskustelu);
             }
 
             rs.close();
@@ -196,7 +213,7 @@ public class FoorumiDao {
     public List<Keskustelualue> findAllKeskustelualue() throws SQLException {
 
         try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Opiskelija");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue");
 
             ResultSet rs = stmt.executeQuery();
             List<Keskustelualue> keskustelualueet = new ArrayList<>();
