@@ -5,12 +5,21 @@ public class Keskustelu {
     
     private int id;
     private Keskustelualue keskustelualue;
+    private String nimi;
     
-    public Keskustelu(int id, Keskustelualue k){
+    public Keskustelu(int id, Keskustelualue k, String nimi){
         
         this.id=id;
         this.keskustelualue=k;
-        
+        this.nimi = nimi;
+    }
+
+    public String getNimi() {
+        return nimi;
+    }
+
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
 
     public int getId() {

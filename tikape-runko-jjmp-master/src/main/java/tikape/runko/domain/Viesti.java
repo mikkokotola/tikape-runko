@@ -8,18 +8,18 @@ public class Viesti {
     private int id;
     private Keskustelu keskustelu;
     private String kayttaja;
-    private String otsikko;
+//    private String otsikko;
     private String runko;
     private Timestamp viestinaika;
     
 
-    public Viesti(int id, Keskustelu keskustelu, String kayttaja, String otsikko, String runko, Timestamp viestinaika) {
+    public Viesti(int id, Keskustelu keskustelu, String kayttaja, String runko, Timestamp viestinaika) {
         
         
         this.id = id;
         this.keskustelu = keskustelu;
         this.kayttaja=kayttaja;
-        this.otsikko=otsikko;
+//        this.otsikko=otsikko;
         this.runko=runko;
         this.viestinaika=viestinaika;
         
@@ -49,13 +49,13 @@ public class Viesti {
         this.kayttaja = kayttaja;
     }
 
-    public String getOtsikko() {
-        return otsikko;
-    }
-
-    public void setOtsikko(String otsikko) {
-        this.otsikko = otsikko;
-    }
+//    public String getOtsikko() {
+//        return otsikko;
+//    }
+//
+//    public void setOtsikko(String otsikko) {
+//        this.otsikko = otsikko;
+//    }
 
     public String getRunko() {
         return runko;

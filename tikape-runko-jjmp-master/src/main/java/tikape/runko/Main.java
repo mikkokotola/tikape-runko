@@ -40,18 +40,18 @@ public class Main {
             return new ModelAndView(map, "index");
         }, new ThymeleafTemplateEngine());
 
-        get("/opiskelijat", (req, res) -> {
+        get("/viestit", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("opiskelijat", foorumiDao.findAll());
+            map.put("viestit", foorumiDao.findAllViesti());
 
             return new ModelAndView(map, "opiskelijat");
         }, new ThymeleafTemplateEngine());
 
-        get("/opiskelijat/:id", (req, res) -> {
+        get("/viestit/:id", (req, res) -> {
             HashMap map = new HashMap<>();
-            map.put("opiskelija", foorumiDao.findOne(Integer.parseInt(req.params("id"))));
+            map.put("viesti", foorumiDao.findOneViesti(Integer.parseInt(req.params("id"))));
 
-            return new ModelAndView(map, "opiskelija");
+            return new ModelAndView(map, "viesti");
         }, new ThymeleafTemplateEngine());
     }
 }
