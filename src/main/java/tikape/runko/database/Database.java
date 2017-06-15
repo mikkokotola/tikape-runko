@@ -94,11 +94,14 @@ public class Database {
 
     private List<String> sqliteLauseet() {
         ArrayList<String> lista = new ArrayList<>();
+//        lista.add("DROP TABLE Keskustelualue;");
+//        lista.add("DROP TABLE Keskustelu;");
+//        lista.add("DROP TABLE Viesti;");
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
         lista.add("CREATE TABLE Keskustelualue (id_keskustelualue integer PRIMARY KEY, nimi_keskustelualue varchar(200));");
         lista.add("CREATE TABLE Keskustelu (id_keskustelu integer PRIMARY KEY, keskustelualue integer, nimi_keskustelu varchar(200), FOREIGN KEY(keskustelualue) REFERENCES Keskustelualue(id_keskustelualue));");
-        lista.add("CREATE TABLE Viesti (id_viesti integer PRIMARY KEY, keskustelu integer, FOREIGN KEY(keskustelu) REFERENCES Keskustelu(id_keskustelu), kayttaja varchar(200), otsikko varchar (200), runko varchar(1000), viestinaika timestamp);");
+        lista.add("CREATE TABLE Viesti (id_viesti integer PRIMARY KEY, keskustelu integer, kayttaja varchar(200), runko varchar(1000), viestinaika timestamp, FOREIGN KEY(keskustelu) REFERENCES Keskustelu(id_keskustelu));");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Tietojenkasittely');");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Biologia');");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Sosiologia');");

@@ -8,7 +8,11 @@ import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.Database;
 import tikape.runko.database.FoorumiDao;
+import tikape.runko.database.KeskusteluDao;
+import tikape.runko.database.KeskustelualueDao;
+import tikape.runko.database.ViestiDao;
 import tikape.runko.domain.Keskustelualue;
+import tikape.runko.domain.Viesti;
 
 public class Main {
 
@@ -37,7 +41,17 @@ public class Main {
         db.init();
 
         FoorumiDao foorumiDao = new FoorumiDao(db);
-
+        KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
+        KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
+        ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
+        //testausta
+        
+        List<Viesti> viestilista = viestiDao.findAll();
+        
+        for (Viesti x : viestilista) {
+            System.out.println(x);
+        }
+        
         // Haetaan kaikki keskustelualueet.
         get(
                 "/", (req, res) -> {
