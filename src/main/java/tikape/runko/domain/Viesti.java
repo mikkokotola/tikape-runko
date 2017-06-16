@@ -12,10 +12,9 @@ public class Viesti {
     private String viestinaika;
     
 
-    public Viesti(int id, Keskustelu keskustelu, String kayttaja, String runko, String viestinaika) {
+    public Viesti(int id, String kayttaja, String runko, String viestinaika) {
         
         this.id_viesti = id;
-        this.keskustelu = keskustelu;
         this.kayttaja=kayttaja;
         this.runko=runko;
         this.viestinaika=viestinaika;

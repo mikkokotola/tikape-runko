@@ -10,10 +10,9 @@ public class Keskustelu {
     private String nimi_keskustelu;
     private List<Viesti> viestit;
 
-    public Keskustelu(int id, Keskustelualue k, String nimi) {
+    public Keskustelu(int id, String nimi) {
 
         this.id_keskustelu = id;
-        this.keskustelualue = k;
         this.nimi_keskustelu = nimi;
         this.viestit = new ArrayList<>();
     }

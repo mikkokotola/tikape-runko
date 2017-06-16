@@ -11,6 +11,7 @@ import tikape.runko.database.FoorumiDao;
 import tikape.runko.database.KeskusteluDao;
 import tikape.runko.database.KeskustelualueDao;
 import tikape.runko.database.ViestiDao;
+import tikape.runko.domain.Keskustelu;
 import tikape.runko.domain.Keskustelualue;
 import tikape.runko.domain.Viesti;
 
@@ -44,11 +45,13 @@ public class Main {
         KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
         KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
         ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
-        
+
         //testausta
-        List<Viesti> vlista = viestiDao.findAll();
+
+        keskusteluDao.add(1000);
+        List<Keskustelualue> vlista = keskustelualueDao.findAll();
         
-        for (Viesti x : vlista) {
+        for (Keskustelualue x : vlista) {
             System.out.println(x);
         }
         

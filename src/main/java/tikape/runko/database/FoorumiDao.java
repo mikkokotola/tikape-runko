@@ -71,7 +71,7 @@ public class FoorumiDao {
                     keskustelualue = lista.get(listanIndex);
 
                 }
-                Keskustelu lisattavaKeskustelu = new Keskustelu(id, keskustelualue, nimi);
+                Keskustelu lisattavaKeskustelu = new Keskustelu(id, nimi);
                 k.add(lisattavaKeskustelu);
                 keskustelualue.addKeskustelu(lisattavaKeskustelu);
             }

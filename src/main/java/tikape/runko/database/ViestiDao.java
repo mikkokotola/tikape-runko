@@ -38,12 +38,12 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         }
         Integer id = rs.getInt("id_viesti");
 // ONGELMIA: tämä keskusteluun ja keskustelualueeseen linkittäminen ei nyt mene oikein (käytetään väärää id:tä).
-        Keskustelu keskustelu = new Keskustelu(rs.getInt("id_viesti"), new Keskustelualue(rs.getInt("id_keskustelu"), rs.getString("nimi")), rs.getString("nimi"));
+        Keskustelu keskustelu = new Keskustelu(rs.getInt("id_viesti"), rs.getString("nimi"));
         String kayttaja = rs.getString("kayttaja");
         String runko = rs.getString("runko");
         String viestinaika = "" + rs.getTimestamp("Viesti.viestinaika");
 
-        Viesti v = new Viesti(id, keskustelu, kayttaja, runko, viestinaika);
+        Viesti v = new Viesti(id, kayttaja, runko, viestinaika);
 
         rs.close();
         stmt.close();
@@ -68,12 +68,12 @@ public class ViestiDao implements Dao<Viesti, Integer> {
 
             // KESKEN, miten käsitellään jo olemassa olevat keskustelualueet (samasta hakuerästä)
             Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("id_keskustelualue"), rs.getString("nimi_keskustelualue"));
-            Keskustelu keskustelu = new Keskustelu(rs.getInt("id_keskustelu"), keskustelualue, rs.getString("nimi_keskustelu"));
+            Keskustelu keskustelu = new Keskustelu(rs.getInt("id_keskustelu"), rs.getString("nimi_keskustelu"));
             String kayttaja = rs.getString("kayttaja");
             String runko = rs.getString("runko");
             String viestinaika = "" + rs.getTimestamp("viestinaika");
 
-            viestit.add(new Viesti(id, keskustelu, kayttaja, runko, viestinaika));
+            viestit.add(new Viesti(id, kayttaja, runko, viestinaika));
         }
 
         rs.close();
@@ -98,12 +98,12 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         ResultSet rs = stmt.executeQuery();
 
         Integer id = rs.getInt("id");
-        Keskustelu keskustelu = new Keskustelu(rs.getInt("id"), new Keskustelualue(rs.getInt("id"), rs.getString("nimi")), rs.getString("nimi"));
+        Keskustelu keskustelu = new Keskustelu(rs.getInt("id"), rs.getString("nimi"));
         String kayttaja = rs.getString("kayttaja");
         String runko = rs.getString("runko");
         String viestinaika = "" + rs.getTimestamp("Viesti.viestinaika");
 
-        Viesti v = new Viesti(id, keskustelu, kayttaja, runko, viestinaika);
+        Viesti v = new Viesti(id, kayttaja, runko, viestinaika);
         ;
 
         rs.close();

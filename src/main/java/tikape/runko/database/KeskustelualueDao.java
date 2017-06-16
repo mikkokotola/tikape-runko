@@ -24,7 +24,7 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
     @Override
     public Keskustelualue findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id_keskustelualue = ?");
         stmt.setInt(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -33,8 +33,8 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
         if (!hasOne) {
             return null;
         }
-        Integer id = rs.getInt("id");
-        String nimi = rs.getString("nimi");
+        Integer id = rs.getInt("id_keskustelualue");
+        String nimi = rs.getString("nimi_keskustelualue");
 
         Keskustelualue k = new Keskustelualue(id, nimi);
 
@@ -76,18 +76,8 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
     public void add(Integer key) throws SQLException {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelualue VALUES (?, ?)");
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("nimi");
-
-            stmt.setInt(1, id);
-            stmt.setString(2, nimi);
-        }
-
-        rs.close();
+        stmt.setInt(1, key);
+        stmt.setString(2, "nimi_keskustelualue");
         stmt.close();
         connection.close();
 

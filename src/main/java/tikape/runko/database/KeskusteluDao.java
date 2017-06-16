@@ -20,8 +20,41 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
     }
 
     @Override
-    public List findAll() throws SQLException {
-        return null;
+    public List<Keskustelu> findAll() throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
+
+        ResultSet rs = stmt.executeQuery();
+        Map<Integer, List<Keskustelu>> keskustelunkeskustelualue = new HashMap<>();
+        List<Keskustelu> keskustelut = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id_keskustelu");
+            String nimi = rs.getString("nimi_keskustelu");
+
+            Keskustelu k = new Keskustelu(id, nimi);
+
+            keskustelut.add(k);
+
+            int keskustelualue = rs.getInt("keskustelualue");
+            if (!keskustelunkeskustelualue.containsKey(keskustelualue)) {
+                keskustelunkeskustelualue.put(keskustelualue, new ArrayList<>());
+            }
+            keskustelunkeskustelualue.get(keskustelualue).add(k);
+
+        }
+        rs.close();
+        stmt.close();
+        connection.close();
+        for (Keskustelualue kealue : this.keskustelualueDao.findAll()) {
+            if (!keskustelunkeskustelualue.containsKey(kealue.getId())) {
+                continue;
+            }
+
+            for (Keskustelu keskustelu : keskustelunkeskustelualue.get(kealue.getId())) {
+                keskustelu.setKeskustelualue(kealue);
+            }
+        }
+        return keskustelut;
     }
 
     @Override
@@ -32,7 +65,7 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
     @Override
     public Keskustelu findOne(Integer key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu WHERE id_keskustelu = ?");
         stmt.setInt(1, key);
 
         ResultSet rs = stmt.executeQuery();
@@ -41,16 +74,17 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         if (!hasOne) {
             return null;
         }
-        Integer id = rs.getInt("id");
-        String nimi = rs.getString("kayttaja");
-        Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("id"), rs.getString("nimi"));
-
-        Keskustelu k = new Keskustelu(id, keskustelualue, nimi);
+        Integer id = rs.getInt("id_keskustelu");
+        String nimi = rs.getString("nimi_keskustelu");
+        
+        Keskustelu k = new Keskustelu(id, nimi);
+        
+        Integer alue = rs.getInt("Keskustelualue");
 
         rs.close();
         stmt.close();
         connection.close();
-        k.setKeskustelualue(this.keskustelualueDao.findOne(keskustelualue.getId()));
+        k.setKeskustelualue(this.keskustelualueDao.findOne(alue));
 
         return k;
 
@@ -61,18 +95,12 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelu VALUES (?, ?, ?)");
         stmt.setInt(1, key);
-        ResultSet rs = stmt.executeQuery();
+        stmt.setObject(2, "keskustelualue");
+        stmt.setString(3, "nimi_keskustelualue");
 
-        while (rs.next()) {
-            String nimi = rs.getString("nimi");
-
-            stmt.setObject(2, nimi);
-            stmt.setString(3, nimi);
-        }
-
-        rs.close();
         stmt.close();
         connection.close();
+        
 
     }
 
