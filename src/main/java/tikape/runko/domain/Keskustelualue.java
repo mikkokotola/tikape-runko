@@ -6,32 +6,32 @@ import java.util.List;
 
 public class Keskustelualue {
     
-    private int id;
-    private String nimi;
+    private int id_keskustelualue;
+    private String nimi_keskustelualue;
     private List<Keskustelu> keskustelut;
     
     public Keskustelualue(int id, String nimi){
         
-        this.id=id;
-        this.nimi=nimi;
+        this.id_keskustelualue=id;
+        this.nimi_keskustelualue=nimi;
         this.keskustelut = new ArrayList<>();
         
     }
 
     public int getId() {
-        return id;
+        return id_keskustelualue;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id_keskustelualue = id;
     }
 
     public String getNimi() {
-        return nimi;
+        return nimi_keskustelualue;
     }
 
     public void setNimi(String nimi) {
-        this.nimi = nimi;
+        this.nimi_keskustelualue = nimi;
     }
 
     public List<Keskustelu> getKeskustelut() {

@@ -5,32 +5,29 @@ import java.sql.Timestamp;
 
 public class Viesti {
     
-    private int id;
+    private int id_viesti;
     private Keskustelu keskustelu;
     private String kayttaja;
-//    private String otsikko;
     private String runko;
     private String viestinaika;
     
 
     public Viesti(int id, Keskustelu keskustelu, String kayttaja, String runko, String viestinaika) {
         
-        
-        this.id = id;
+        this.id_viesti = id;
         this.keskustelu = keskustelu;
         this.kayttaja=kayttaja;
-//        this.otsikko=otsikko;
         this.runko=runko;
         this.viestinaika=viestinaika;
         
     }
 
     public int getId() {
-        return id;
+        return id_viesti;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id_viesti = id;
     }
 
     public Keskustelu getKeskustelu() {

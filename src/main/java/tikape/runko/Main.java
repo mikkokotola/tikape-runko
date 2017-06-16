@@ -44,11 +44,11 @@ public class Main {
         KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
         KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
         ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
+        
         //testausta
+        List<Viesti> vlista = viestiDao.findAll();
         
-        List<Viesti> viestilista = viestiDao.findAll();
-        
-        for (Viesti x : viestilista) {
+        for (Viesti x : vlista) {
             System.out.println(x);
         }
         
@@ -56,7 +56,7 @@ public class Main {
         get(
                 "/", (req, res) -> {
                     HashMap map = new HashMap<>();
-                    List<Keskustelualue> lista = foorumiDao.findAllKeskustelualue(); // EI TOIMI jostain syystä. Kadottaa tuon alustuksessa luodun aluelistan. Tämä pitää joka tapauksessa vaihtaa SQL-kyselyyn findAll
+                    List<Keskustelualue> lista = keskustelualueDao.findAll(); // EI TOIMI jostain syystä. Kadottaa tuon alustuksessa luodun aluelistan. Tämä pitää joka tapauksessa vaihtaa SQL-kyselyyn findAll
                     map.put("alueet", lista);
 
                     return new ModelAndView(map, "index");

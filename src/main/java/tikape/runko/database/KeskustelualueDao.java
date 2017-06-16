@@ -15,63 +15,56 @@ import tikape.runko.domain.Viesti;
 public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
 
     private Database database;
-    
 
     public KeskustelualueDao(Database database) {
         this.database = database;
-        
+
     }
 
     @Override
     public Keskustelualue findOne(Integer key) throws SQLException {
-        try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id = ?");
-            stmt.setInt(1, key);
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id = ?");
+        stmt.setInt(1, key);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            boolean hasOne = rs.next();
-            if (!hasOne) {
-                return null;
-            }
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("nimi");
-
-            Keskustelualue k = new Keskustelualue(id, nimi);
-
-            rs.close();
-            stmt.close();
-            connection.close();
-
-            return k;
-        } catch (Exception e) {
+        boolean hasOne = rs.next();
+        if (!hasOne) {
             return null;
         }
+        Integer id = rs.getInt("id");
+        String nimi = rs.getString("nimi");
+
+        Keskustelualue k = new Keskustelualue(id, nimi);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return k;
+
     }
 
     @Override
     public List<Keskustelualue> findAll() throws SQLException {
+//try-catch rakenne esti toiminnan, en tiedä miksi.
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue");
 
-        try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue");
+        ResultSet rs = stmt.executeQuery();
+        List<Keskustelualue> keskustelualueet = new ArrayList<>();
+        while (rs.next()) {
+            Integer id = rs.getInt("id_keskustelualue");
+            String nimi = rs.getString("nimi_keskustelualue");
 
-            ResultSet rs = stmt.executeQuery();
-            List<Keskustelualue> keskustelualueet = new ArrayList<>();
-            while (rs.next()) {
-                Integer id = rs.getInt("id");
-                String nimi = rs.getString("nimi");
-
-                keskustelualueet.add(new Keskustelualue(id, nimi));
-            }
-
-            rs.close();
-            stmt.close();
-            connection.close();
-
-            return keskustelualueet;
-        } catch (Exception e) {
-            return null;
+            keskustelualueet.add(new Keskustelualue(id, nimi));
         }
+        rs.close();
+        stmt.close();
+        connection.close();
+        return keskustelualueet;
+
     }
 
     @Override
@@ -81,7 +74,23 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
 
     @Override
     public void add(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelualue VALUES (?, ?)");
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Integer id = rs.getInt("id");
+            String nimi = rs.getString("nimi");
+
+            stmt.setInt(1, id);
+            stmt.setString(2, nimi);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
     }
 
     @Override

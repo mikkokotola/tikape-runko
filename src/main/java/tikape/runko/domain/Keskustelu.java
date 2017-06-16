@@ -5,33 +5,33 @@ import java.util.List;
 
 public class Keskustelu {
 
-    private int id;
+    private int id_keskustelu;
     private Keskustelualue keskustelualue;
-    private String nimi;
+    private String nimi_keskustelu;
     private List<Viesti> viestit;
 
     public Keskustelu(int id, Keskustelualue k, String nimi) {
 
-        this.id = id;
+        this.id_keskustelu = id;
         this.keskustelualue = k;
-        this.nimi = nimi;
+        this.nimi_keskustelu = nimi;
         this.viestit = new ArrayList<>();
     }
 
     public String getNimi() {
-        return nimi;
+        return nimi_keskustelu;
     }
 
     public void setNimi(String nimi) {
-        this.nimi = nimi;
+        this.nimi_keskustelu = nimi;
     }
 
     public int getId() {
-        return id;
+        return id_keskustelu;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id_keskustelu = id;
     }
 
     public Keskustelualue getKeskustelualue() {

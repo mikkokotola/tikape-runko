@@ -31,36 +31,49 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
 
     @Override
     public Keskustelu findOne(Integer key) throws SQLException {
-        try (Connection connection = database.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
-            stmt.setInt(1, key);
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Viesti WHERE id = ?");
+        stmt.setInt(1, key);
 
-            ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.executeQuery();
 
-            boolean hasOne = rs.next();
-            if (!hasOne) {
-                return null;
-            }
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("kayttaja");
-            Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("id"), rs.getString("nimi"));
-
-            Keskustelu k = new Keskustelu(id, keskustelualue, nimi);
-
-            rs.close();
-            stmt.close();
-            connection.close();
-
-            return k;
-        } catch (Exception e) {
+        boolean hasOne = rs.next();
+        if (!hasOne) {
             return null;
         }
+        Integer id = rs.getInt("id");
+        String nimi = rs.getString("kayttaja");
+        Keskustelualue keskustelualue = new Keskustelualue(rs.getInt("id"), rs.getString("nimi"));
+
+        Keskustelu k = new Keskustelu(id, keskustelualue, nimi);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+        k.setKeskustelualue(this.keskustelualueDao.findOne(keskustelualue.getId()));
+
+        return k;
 
     }
 
     @Override
     public void add(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelu VALUES (?, ?, ?)");
+        stmt.setInt(1, key);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String nimi = rs.getString("nimi");
+
+            stmt.setObject(2, nimi);
+            stmt.setString(3, nimi);
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
     }
 
     @Override
