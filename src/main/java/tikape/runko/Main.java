@@ -47,20 +47,28 @@ public class Main {
         ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
 
         //testausta
+        List<Integer> lista = new ArrayList<>();
+        lista.add(1);
+        lista.add(2);
+        System.out.println(keskustelualueDao.findAllIn(lista));
 
-        keskusteluDao.add(1000);
-        List<Keskustelualue> vlista = keskustelualueDao.findAll();
         
-        for (Keskustelualue x : vlista) {
-            System.out.println(x);
-        }
-        
+        List<Keskustelualue> aluelista = keskustelualueDao.findAll();
+
+//        for (Keskustelualue x : aluelista) {
+//            System.out.println(x);
+//           
+//        }
+//        List<Viesti> list = viestiDao.findAll(); 
+//        for (Viesti x : list) {
+//            System.out.println(x);
+//        }
         // Haetaan kaikki keskustelualueet.
         get(
                 "/", (req, res) -> {
                     HashMap map = new HashMap<>();
-                    List<Keskustelualue> lista = keskustelualueDao.findAll(); // EI TOIMI jostain syystä. Kadottaa tuon alustuksessa luodun aluelistan. Tämä pitää joka tapauksessa vaihtaa SQL-kyselyyn findAll
-                    map.put("alueet", lista);
+                    List<Keskustelualue> keskustelualuelista = keskustelualueDao.findAll();
+                    map.put("alueet", keskustelualuelista);
 
                     return new ModelAndView(map, "index");
                 },
@@ -72,7 +80,7 @@ public class Main {
                 "/:id_keskustelualue", (req, res) -> {
                     HashMap map = new HashMap<>();
                     String id_keskustelualue = req.queryParams("id_keskustelualue");
-                    map.put("keskustelut", foorumiDao.findAllAlueenKeskustelut(foorumi, id_keskustelualue));
+                    map.put("keskustelut", keskusteluDao.findAllIn(map.keySet()));
                     map.put("alue", id_keskustelualue);
 
                     return new ModelAndView(map, "keskustelualue");
@@ -102,7 +110,7 @@ public class Main {
                     // 
                     String id_keskustelualue = req.queryParams("id_keskustelualue");
                     String id_keskustelu = req.queryParams("id_keskustelu");
-                    map.put("viesti", foorumiDao.findOneViesti(Integer.parseInt(req.params("id_viesti")))); // KESKEN, muutettava dao-metodiksi.
+                    map.put("viesti", viestiDao.findOne(Integer.parseInt(req.params("id_viesti")))); // KESKEN, muutettava dao-metodiksi.
                     map.put("alue", id_keskustelualue);
                     map.put("keskustelu", id_keskustelu);
                     return new ModelAndView(map, "viesti");

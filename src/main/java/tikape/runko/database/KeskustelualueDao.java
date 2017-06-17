@@ -48,7 +48,7 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
 
     @Override
     public List<Keskustelualue> findAll() throws SQLException {
-//try-catch rakenne esti toiminnan, en tiedä miksi.
+
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue");
 
@@ -69,7 +69,33 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
 
     @Override
     public List<Keskustelualue> findAllIn(Collection<Integer> keys) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (keys.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        StringBuilder muuttujat = new StringBuilder("?");
+        for (int i = 1; i < keys.size(); i++) {
+            muuttujat.append(", ?");
+        }
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelualue WHERE id_keskustelualue IN (" + muuttujat + ")");
+        int laskuri = 1;
+        for (Integer key : keys) {
+            stmt.setObject(laskuri, key);
+            laskuri++;
+        }
+
+        ResultSet rs = stmt.executeQuery();
+        List<Keskustelualue> alueet = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id_keskustelualue");
+            String nimi = rs.getString("nimi_keskustelualue");
+
+            alueet.add(new Keskustelualue(id, nimi));
+        }
+
+        return alueet;
     }
 
     @Override

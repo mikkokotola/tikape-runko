@@ -25,8 +25,11 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu");
 
         ResultSet rs = stmt.executeQuery();
+
         Map<Integer, List<Keskustelu>> keskustelunkeskustelualue = new HashMap<>();
+
         List<Keskustelu> keskustelut = new ArrayList<>();
+
         while (rs.next()) {
             Integer id = rs.getInt("id_keskustelu");
             String nimi = rs.getString("nimi_keskustelu");
@@ -45,21 +48,61 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         rs.close();
         stmt.close();
         connection.close();
-        for (Keskustelualue kealue : this.keskustelualueDao.findAll()) {
-            if (!keskustelunkeskustelualue.containsKey(kealue.getId())) {
-                continue;
-            }
-
+        for (Keskustelualue kealue : this.keskustelualueDao.findAllIn(keskustelunkeskustelualue.keySet())) {
             for (Keskustelu keskustelu : keskustelunkeskustelualue.get(kealue.getId())) {
                 keskustelu.setKeskustelualue(kealue);
             }
+
         }
         return keskustelut;
     }
 
     @Override
-    public List findAllIn(Collection keys) throws SQLException {
-        return null;
+    public List<Keskustelu> findAllIn(Collection<Integer> keys) throws SQLException {
+        if (keys.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        StringBuilder muuttujat = new StringBuilder("?");
+        for (int i = 1; i < keys.size(); i++) {
+            muuttujat.append(", ?");
+        }
+
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Keskustelu WHERE id_keskustelu IN (" + muuttujat + ")");
+        int laskuri = 1;
+        for (Integer key : keys) {
+            stmt.setObject(laskuri, key);
+            laskuri++;
+        }
+
+        ResultSet rs = stmt.executeQuery();
+        Map<Integer, List<Keskustelu>> keskustelunkeskustelualue = new HashMap<>();
+        List<Keskustelu> keskustelut = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id_keskustelu");
+            String nimi = rs.getString("nimi_keskustelu");
+            Keskustelu k = new Keskustelu(id, nimi);
+
+            keskustelut.add(k);
+            int keskustelualue = rs.getInt("keskustelualue");
+            if (!keskustelunkeskustelualue.containsKey(keskustelualue)) {
+                keskustelunkeskustelualue.put(keskustelualue, new ArrayList<>());
+            }
+            keskustelunkeskustelualue.get(keskustelualue).add(k);
+
+        }
+        rs.close();
+        stmt.close();
+        connection.close();
+        for (Keskustelualue kealue : this.keskustelualueDao.findAllIn(keskustelunkeskustelualue.keySet())) {
+            for (Keskustelu keskustelu : keskustelunkeskustelualue.get(kealue.getId())) {
+                keskustelu.setKeskustelualue(kealue);
+            }
+
+        }
+
+        return keskustelut;
     }
 
     @Override
@@ -76,10 +119,10 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         }
         Integer id = rs.getInt("id_keskustelu");
         String nimi = rs.getString("nimi_keskustelu");
-        
+
         Keskustelu k = new Keskustelu(id, nimi);
-        
-        Integer alue = rs.getInt("Keskustelualue");
+
+        Integer alue = rs.getInt("keskustelualue");
 
         rs.close();
         stmt.close();
@@ -100,7 +143,6 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
 
         stmt.close();
         connection.close();
-        
 
     }
 

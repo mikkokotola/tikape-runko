@@ -9,10 +9,10 @@ public class Viesti {
     private Keskustelu keskustelu;
     private String kayttaja;
     private String runko;
-    private String viestinaika;
+    private Timestamp viestinaika;
     
 
-    public Viesti(int id, String kayttaja, String runko, String viestinaika) {
+    public Viesti(int id, String kayttaja, String runko, Timestamp viestinaika) {
         
         this.id_viesti = id;
         this.kayttaja=kayttaja;
@@ -61,11 +61,11 @@ public class Viesti {
         this.runko = runko;
     }
 
-    public String getViestinaika() {
+    public Timestamp getViestinaika() {
         return viestinaika;
     }
 
-    public void setViestinaika(String viestinaika) {
+    public void setViestinaika(Timestamp viestinaika) {
         this.viestinaika = viestinaika;
     }
 

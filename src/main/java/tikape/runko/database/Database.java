@@ -85,12 +85,12 @@ public class Database {
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Sosiologia'),'Luennot');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Matematiikka'),'Matriisit');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Matematiikka'),'Inregraalit');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Koodaaminen on hauskaa', '2017-01-01-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Nojaa', '2017-01-02-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Miten niin ei?', '2017-01-02-09-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Liian vaikeaa', '2017-01-03-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Nää sql-kyselyt saa pään pyörälle', '2017-01-01-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Mutta tekemällä oppii', '2017-01-02-00-00-00-00');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Koodaaminen on hauskaa', '2017-01-01 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Nojaa', '2017-01-02 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Miten niin ei?', '2017-01-02 09:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Liian vaikeaa', '2017-01-03 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Nää sql-kyselyt saa pään pyörälle', '2017-01-01 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Mutta tekemällä oppii', '2017-01-02 00:00:00.0');");
         return lista;
     }
 
@@ -118,12 +118,12 @@ public class Database {
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Sosiologia'),'Luennot');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Matematiikka'),'Matriisit');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Matematiikka'),'Inregraalit');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Koodaaminen on hauskaa', '2017-01-01-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Nojaa', '2017-01-02-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Miten niin ei?', '2017-01-02-09-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Liian vaikeaa', '2017-01-03-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Nää sql-kyselyt saa pään pyörälle', '2017-01-01-00-00-00-00');");
-        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Mutta tekemällä oppii', '2017-01-02-00-00-00-00');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Koodaaminen on hauskaa', '2017-01-01 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Nojaa', '2017-01-02 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Juha', 'Miten niin ei?', '2017-01-02 09:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Kapistely on kivaa'),'Pekka', 'Liian vaikeaa', '2017-01-03 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Nää sql-kyselyt saa pään pyörälle', '2017-01-01 00:00:00.0');");
+        lista.add("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES ((SELECT id_keskustelu FROM Keskustelu WHERE nimi_keskustelu = 'Tikape'),'Juha', 'Mutta tekemällä oppii', '2017-01-02 00:00:00.0');");
         return lista;
     }
 }
