@@ -1,5 +1,6 @@
 package tikape.runko.domain;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,26 @@ public class Keskustelu {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public int getViestienLkm() {
+        return this.viestit.size();
+    }
+
+    public String getViimeisimmanViestinAika() {
+        if (!this.viestit.isEmpty()) {
+            Timestamp viimeisin = this.viestit.get(0).getViestinaika();
+
+            for (Viesti v : this.viestit) {
+                if (v.getViestinaika().after(viimeisin)) {
+                    viimeisin = v.getViestinaika();
+                }
+            }
+
+            return viimeisin.toString();
+        } else {
+            return "Ei kirjattuja viestejä.";
         }
     }
 }

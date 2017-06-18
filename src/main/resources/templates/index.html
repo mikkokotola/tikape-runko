@@ -9,12 +9,20 @@
     <body>
         <h1>JaJaMiPe-Keskustelufoorumi</h1>
 
-        <ol>
-            <li th:each="alue: ${alueet}">
-                <span th:text="${alue.nimi}">Keskustelualueen nimi</span> <a th:href="${'/' + alue.id}">Linkki alueen sivulle</a>
-            </li>
-        </ol>
+        <table>
+            <tr>
+                <th>Alue</th>
+                <th>>Viestejä yhteensä</th>
+                <th>Viimeisin viesti</th>
+            </tr>
+            <tr th:each="alue: ${alueet}">
+                <td> <a th:text="${alue.nimi}" th:href="${'/' + alue.id}">Keskustelualueen nimi tähän</a></td>
+                <td th:text="${alue.viestien_lkm}">Viestien lkm tähän</td> 
+                <td th:text="${alue.viimeisimmanViestinAika}">Viimeisimmän viestin ajankohta tähän</td>
+            </tr>
+            
+        </table>
 
-        
+
     </body>
 </html>
