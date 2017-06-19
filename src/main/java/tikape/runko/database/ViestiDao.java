@@ -145,6 +145,8 @@ public class ViestiDao implements Dao<Viesti, Integer> {
 
     @Override
     public void add(Integer key) throws SQLException {
+        
+        
         Connection connection = database.getConnection();
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti VALUES (?, ?, ?, ?, ?)");
         stmt.setInt(1, key);
@@ -153,6 +155,22 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         stmt.setString(4, "runko");
         stmt.setObject(5, "viestinaika");
 
+        stmt.close();
+        connection.close();
+
+    }
+    
+    public void addViesti(String keskustelu, String kayttaja, String runko) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES (?, ?, ?, ?)");
+        stmt.setObject(1, keskustelu );
+        stmt.setString(2, kayttaja);
+        stmt.setString(3, runko);
+        stmt.setObject(4, "NOW()");
+
+        ResultSet rs = stmt.executeQuery();
+        
+        rs.close();
         stmt.close();
         connection.close();
 

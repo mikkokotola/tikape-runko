@@ -1,6 +1,7 @@
 package tikape.runko;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,7 @@ import tikape.runko.domain.Viesti;
 
 public class Main {
 
-    // Siirretty foorumin "pääkoodi" erilliseen luokkaan Foorumi.
     public static void main(String[] args) throws Exception {
-
-        Foorumi foorumi = new Foorumi();
 
 // Portin määritys Herokua varten, lisätty TiKaPe-materiaalin ohjeen mukaan.
         if (System.getenv(
@@ -31,8 +29,8 @@ public class Main {
 
         // käytetään oletuksena paikallista sqlite-tietokantaa
         String jdbcOsoite = "jdbc:sqlite:foorumi.db";
-        // jos heroku antaa käyttöömme tietokantaosoitteen, otetaan se käyttöön
 
+        // jos heroku antaa käyttöömme tietokantaosoitteen, otetaan se käyttöön
         if (System.getenv(
                 "DATABASE_URL") != null) {
             jdbcOsoite = System.getenv("DATABASE_URL");
@@ -42,21 +40,6 @@ public class Main {
 
         db.init();
 
-        //FoorumiDao foorumiDao = new FoorumiDao(db);
-        //testausta
-        //List<Integer> lista = new ArrayList<>();
-        //lista.add(1);
-        //lista.add(2);
-        //System.out.println(keskustelualueDao.findAllIn(lista));
-        //List<Keskustelualue> aluelista = keskustelualueDao.findAll();
-//        for (Keskustelualue x : aluelista) {
-//            System.out.println(x);
-//           
-//        }
-//        List<Viesti> list = viestiDao.findAll(); 
-//        for (Viesti x : list) {
-//            System.out.println(x);
-//        }
         // Haetaan kaikki keskustelualueet.
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
@@ -100,7 +83,7 @@ public class Main {
                     HashMap map = new HashMap<>();
                     String id_keskustelualue = req.params("id_keskustelualue");
                     String id_keskustelu = req.params("id_keskustelu");
-                    
+
                     List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
                     int valittavaAlueIndex = 0;
 
@@ -121,8 +104,8 @@ public class Main {
                     }
 
                     List<Viesti> keskustelunViestit = alueenKeskustelut.get(valittavaKeskusteluIndex).getViestit();
-                    
-                    map.put("viestit", keskustelunViestit); 
+
+                    map.put("viestit", keskustelunViestit);
                     map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
                     map.put("keskustelu", alueenKeskustelut.get(valittavaKeskusteluIndex));
 
@@ -131,7 +114,40 @@ public class Main {
                 new ThymeleafTemplateEngine()
         );
 
+        // Tämä on vaihtoehtoinen uuden viestin lisäävän postin toteutus, ei käytössä tällä hetkellä.
+        post("/alue/:id_keskustelualue/keskustelu/:id_keskustelu/lisaaviesti", (req, res) -> {
+            String alue = req.params("id_keskustelualue");
+            String keskustelu = req.params("id_keskustelu");
+            String kayttaja = req.queryParams("kayttaja");
+            String runko = req.queryParams("viestinrunko");
 
+            KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
+            KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
+            ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
+
+            viestiDao.addViesti(keskustelu, kayttaja, runko);
+
+            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelu);
+            return "";
+        });
+
+        // Uuden viestin lisääminen postilla.
+        post("/lisaaviesti", (req, res) -> {
+            String alue = req.queryParams("alue");
+            String keskustelu = req.queryParams("keskustelu");
+            String kayttaja = req.queryParams("kayttaja");
+            String runko = req.queryParams("viestinrunko");
+
+            KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
+            KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
+            ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
+
+            viestiDao.addViesti(keskustelu, kayttaja, runko);
+
+            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelu);
+            return "";
+        }
+        );
     }
 
     public static List<Keskustelualue> luoKeskustelut(Database db) throws SQLException {

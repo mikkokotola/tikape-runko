@@ -4,7 +4,7 @@
     <head>
         <title>JaJaMiPe-Keskustelufoorumi</title>
         <meta charset="utf-8"/>
-        
+
         <style media="screen" type="text/css">
             body{
                 background-color: bisque;
@@ -39,7 +39,7 @@
                 padding: 10px;
                 font-family: "Arial", serif;
             } 
-            
+
             table{
                 border: 1px;
                 border-color: black;
@@ -47,7 +47,7 @@
                 font-family: "Arial", serif;
                 font-size: 18px;
             }
-            
+
 
 
         </style>
@@ -62,15 +62,22 @@
                 <span th:text="${viesti.runko}">Viestin runko</span> t: <span th:text="${viesti.kayttaja}">Käyttäjä</span>
             </li>
         </ol>
+
+        <p class="keskita"> Vastaa keskusteluun: </p>
+       
+        <form method="POST" action="/lisaaviesti">
+            <textarea rows="4" cols="50" name="viestinrunko"/>
+            <br></br>
+            <input type="text" name="kayttaja"/>
+            <br></br>
+            <input type="hidden" name="alue" th:value="${alue.id}"/> 
+            <input type="hidden" name="keskustelu" th:value="${keskustelu.id}"/>
+            <input type="submit" value="Lähetä"/>
+        </form>
         
-        <p class="keskita"> Vastaa keskusteluun: <br></br>
-        <textarea rows="4" cols="50"></textarea> <br></br>
-        <input  type="submit" value="Lähetä"/></p>
-        
-        <br></br> 
-        <br></br>
+        <p></p>
         <a th:href="${'/alue/' + alue.id}">Palaa alueen sivulle</a>
         <a href="/">Palaa etusivulle</a>
-        
+
     </body>
 </html>

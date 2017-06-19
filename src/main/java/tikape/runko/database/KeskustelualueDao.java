@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import tikape.runko.Foorumi;
 import tikape.runko.domain.Keskustelu;
 import tikape.runko.domain.Keskustelualue;
 import tikape.runko.domain.Viesti;
