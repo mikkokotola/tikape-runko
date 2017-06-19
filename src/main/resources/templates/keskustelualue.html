@@ -4,6 +4,53 @@
     <head>
         <title>JaJaMiPe-Keskustelufoorumi</title>
         <meta charset="utf-8" />
+        
+        <style media="screen" type="text/css">
+            body{
+                background-color: bisque;
+                color: black;
+
+            }
+
+
+            h1{
+                text-align: center;
+                font-size: 32px;
+                font-family: "Arial", serif;
+
+            }
+
+
+
+            p{
+
+                color: black;
+                border: 1px;
+                border-style: double;
+                border-color: lightgray;
+                font-family: "Arial", serif;
+            }
+            .keskita {
+                margin: auto;
+                width: 50%;
+                border: 2px; 
+                border-color: green;
+                border-style: solid;
+                padding: 10px;
+                font-family: "Arial", serif;
+            } 
+            
+            table{
+                border: 1px;
+                border-color: black;
+                border-style: double;
+                font-family: "Arial", serif;
+                font-size: 18px;
+            }
+            
+
+
+        </style>
     </head>
 
     <body>
@@ -23,6 +70,6 @@
             
         </table>
 
-        
+        <a th:href="&{'/'}">palaa etusivulle</a>
     </body>
 </html>
