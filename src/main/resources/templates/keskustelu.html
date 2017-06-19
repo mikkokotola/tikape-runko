@@ -3,7 +3,7 @@
 
     <head>
         <title>JaJaMiPe-Keskustelufoorumi</title>
-        <meta charset="utf-8" />
+        <meta charset="utf-8"/>
         
         <style media="screen" type="text/css">
             body{
@@ -54,11 +54,12 @@
     </head>
 
     <body>
-        <h1>JaJaMiPe-Keskustelufoorumi / Keskustelun sivu</h1>
+        <h1>JaJaMiPe-Keskustelufoorumi</h1>
 
+        <h2><span th:text="${alue.nimi}"></span>-><span th:text="${keskustelu.nimi}"></span></h2>
         <ol>
             <li th:each="viesti: ${viestit}">
-                <span th:text="${viesti.nimi}">Viestin nimi</span> <a th:href="${'/' + alue.id + '/' + keskustelu.id + '/' + viesti.id}">Linkki viestin sivulle</a>
+                <span th:text="${viesti.runko}">Viestin runko</span> t: <span th:text="${viesti.kayttaja}">Käyttäjä</span>
             </li>
         </ol>
         
@@ -66,9 +67,10 @@
         <textarea rows="4" cols="50"></textarea> <br></br>
         <input  type="submit" value="Lähetä"/></p>
         
+        <br></br> 
         <br></br>
-        <br></br>
-        <a th:href="&{'/'}">Palaa etusivulle</a>
+        <a th:href="${'/alue/' + alue.id}">Palaa alueen sivulle</a>
+        <a href="/">Palaa etusivulle</a>
         
     </body>
 </html>

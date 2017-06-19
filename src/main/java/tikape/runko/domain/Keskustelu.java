@@ -70,7 +70,7 @@ public class Keskustelu {
         }
     }
 
-    public int getViestienLkm() {
+    public int getViestien_lkm() {
         return this.viestit.size();
     }
 

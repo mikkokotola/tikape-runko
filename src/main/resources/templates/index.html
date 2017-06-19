@@ -64,7 +64,7 @@
                 <th>Viimeisin viesti</th>
             </tr>
             <tr th:each="alue: ${alueet}">
-                <td> <a th:text="${alue.nimi}" th:href="${'/' + alue.id}">Keskustelualueen nimi tähän</a></td>
+                <td> <a th:text="${alue.nimi}" th:href="${'/alue/' + alue.id}">Keskustelualueen nimi tähän</a></td>
                 <td th:text="${alue.viestien_lkm}">Viestien lkm tähän</td> 
                 <td th:text="${alue.viimeisimmanViestinAika}">Viimeisimmän viestin ajankohta tähän</td>
             </tr>

@@ -71,9 +71,9 @@ public class Main {
 
         // Haetaan tietyn keskustelualueen keskustelut.
         get(
-                "/:id_keskustelualue", (req, res) -> {
+                "/alue/:id_keskustelualue", (req, res) -> {
                     HashMap map = new HashMap<>();
-                    String id_keskustelualue = req.queryParams("id_keskustelualue");
+                    String id_keskustelualue = req.params("id_keskustelualue");
 
                     List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
                     int valittavaAlueIndex = 0;
@@ -87,42 +87,50 @@ public class Main {
                     List<Keskustelu> alueenKeskustelut = keskustelualuelista.get(valittavaAlueIndex).getKeskustelut();
 
                     map.put("keskustelut", alueenKeskustelut);
-                    map.put("alue", id_keskustelualue);
+                    map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
 
                     return new ModelAndView(map, "keskustelualue");
                 },
                 new ThymeleafTemplateEngine()
         );
 
-        // KESKEN, haetaan tietyn keskustelun viestit.
+        // Haetaan tietyn keskustelun viestit.
         get(
-                "/:id_keskustelualue/:id_keskustelu", (req, res) -> {
+                "/alue/:id_keskustelualue/keskustelu/:id_keskustelu", (req, res) -> {
                     HashMap map = new HashMap<>();
-                    String id_keskustelualue = req.queryParams("id_keskustelualue");
-                    String id_keskustelu = req.queryParams("id_keskustelu");
-                    map.put("viestit", foorumi.getAluelista().get(0).getKeskustelut().get(0).getViestit()); // KESKEN, muutettava dao-metodiksi.
-                    map.put("alue", id_keskustelualue);
-                    map.put("keskustelu", id_keskustelu);
+                    String id_keskustelualue = req.params("id_keskustelualue");
+                    String id_keskustelu = req.params("id_keskustelu");
+                    
+                    List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
+                    int valittavaAlueIndex = 0;
+
+                    for (int i = 0; i < keskustelualuelista.size(); i++) {
+                        if (keskustelualuelista.get(i).getId() == Integer.parseInt(id_keskustelualue)) {
+                            valittavaAlueIndex = i;
+                        }
+                    }
+
+                    List<Keskustelu> alueenKeskustelut = keskustelualuelista.get(valittavaAlueIndex).getKeskustelut();
+
+                    int valittavaKeskusteluIndex = 0;
+
+                    for (int i = 0; i < alueenKeskustelut.size(); i++) {
+                        if (alueenKeskustelut.get(i).getId() == Integer.parseInt(id_keskustelu)) {
+                            valittavaKeskusteluIndex = i;
+                        }
+                    }
+
+                    List<Viesti> keskustelunViestit = alueenKeskustelut.get(valittavaKeskusteluIndex).getViestit();
+                    
+                    map.put("viestit", keskustelunViestit); 
+                    map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
+                    map.put("keskustelu", alueenKeskustelut.get(valittavaKeskusteluIndex));
 
                     return new ModelAndView(map, "keskustelu");
                 },
                 new ThymeleafTemplateEngine()
         );
 
-        // KESKEN, haetaan tietty viesti.
-        get(
-                "/:id_keskustelualue/:id_keskustelu/:id_viesti", (req, res) -> {
-                    HashMap map = new HashMap<>();
-                    // 
-                    String id_keskustelualue = req.queryParams("id_keskustelualue");
-                    String id_keskustelu = req.queryParams("id_keskustelu");
-                    map.put("viesti", "TESTIVIESTI"); // KESKEN.
-                    map.put("alue", id_keskustelualue);
-                    map.put("keskustelu", id_keskustelu);
-                    return new ModelAndView(map, "viesti");
-                },
-                new ThymeleafTemplateEngine()
-        );
 
     }
 
