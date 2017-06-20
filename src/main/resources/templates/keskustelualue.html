@@ -63,7 +63,7 @@
                 <th>Viimeisin viesti</th>
             </tr>
             <tr th:each="keskustelu: ${keskustelut}">
-                <td> <a th:text="${keskustelu.nimi}" th:href="${'/alue/' + alue.id + '/keskustelu/' + keskustelu.id}">Keskustelualueen nimi tähän</a></td>
+                <td> <a th:text="${keskustelu.nimi}" th:href="${'/alue/' + alue.id + '/keskustelu/' + keskustelu.id + '?sivu=1'}">Keskustelualueen nimi tähän</a></td>
                 <td th:text="${keskustelu.viestien_lkm}">Viestien lkm tähän</td> 
                 <td th:text="${keskustelu.viimeisimmanViestinAika}">Viimeisimmän viestin ajankohta tähän</td>
             </tr>

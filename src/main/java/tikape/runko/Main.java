@@ -10,7 +10,6 @@ import spark.ModelAndView;
 import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.Database;
-//import tikape.runko.database.FoorumiDao;
 import tikape.runko.database.KeskusteluDao;
 import tikape.runko.database.KeskustelualueDao;
 import tikape.runko.database.ViestiDao;
@@ -22,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-// Portin määritys Herokua varten, lisätty TiKaPe-materiaalin ohjeen mukaan.
+        // Portin määritys Herokua varten, lisätty TiKaPe-materiaalin ohjeen mukaan.
         if (System.getenv(
                 "PORT") != null) {
             port(Integer.valueOf(System.getenv("PORT")));
@@ -156,12 +155,6 @@ public class Main {
                     List<Viesti> naytettavatViestit = new ArrayList<>();
                     int aloitusnro = 1;
 
-//                    if (sivu < 1) {
-//                        sivu = 1;
-//                    } else if (sivu > (keskustelunViestit.size() / 20) + 1) {
-//                        sivu = (keskustelunViestit.size() / 20) + 1;
-//                    }
-
                     if (sivu != -1) {
                         int sivujenLkm = keskustelunViestit.size() / 20;
                         if (keskustelunViestit.size() % 20 > 0) {
@@ -210,7 +203,6 @@ public class Main {
         }
         );
 
-        // KESKEN
         // Uuden keskustelun lisääminen postilla.
         post("/lisaakeskustelu", (req, res) -> {
             int alue = Integer.parseInt(req.queryParams("alue"));
@@ -236,7 +228,7 @@ public class Main {
             // Lisätään viesti juuri lisättyyn keskusteluun.
             viestiDao.addViesti(keskustelunId, kayttaja, runko);
 
-            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelunId);
+            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelunId + "?sivu=1");
             return "";
         }
         );
