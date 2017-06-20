@@ -131,7 +131,7 @@ public class Main {
 
         // Uuden viestin lisääminen postilla.
         post("/lisaaviesti", (req, res) -> {
-            int alue = Integer.parseInt(req.queryParams("keskustelualue"));
+            int alue = Integer.parseInt(req.queryParams("alue"));
             int keskustelu = Integer.parseInt(req.queryParams("keskustelu"));
             String kayttaja = req.queryParams("kayttaja");
             String runko = req.queryParams("runko");
