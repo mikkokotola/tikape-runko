@@ -1,5 +1,5 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="fi">
 
     <head>
         <title>JaJaMiPe-Keskustelufoorumi</title>
@@ -48,8 +48,6 @@
                 font-size: 18px;
             }
 
-
-
         </style>
     </head>
 
@@ -57,14 +55,14 @@
         <h1>JaJaMiPe-Keskustelufoorumi</h1>
 
         <h2><span th:text="${alue.nimi}"></span>-><span th:text="${keskustelu.nimi}"></span></h2>
-        <ol>
+        <ol th:start="${aloitusnro}">
             <li th:each="viesti: ${viestit}">
                 <span th:text="${viesti.runko}">Viestin runko</span> t: <span th:text="${viesti.kayttaja}">Käyttäjä</span>
             </li>
         </ol>
 
         <p class="keskita"> Vastaa keskusteluun: </p>
-       
+
         <form class="keskita" method="POST" action="/lisaaviesti">
             <p>Viesti:</p>
             <textarea rows="4" cols="50" name="runko"/>
@@ -73,9 +71,20 @@
             <br></br>
             <input type="hidden" name="alue" th:value="${alue.id}"/> 
             <input type="hidden" name="keskustelu" th:value="${keskustelu.id}"/>
+            <input type="hidden" name="aloitusnro" th:value="${aloitusnro}"/>
             <input type="submit" value="Lähetä"/>
         </form>
-        
+
+        <p></p>
+        <ul>
+            Siirry sivulle
+            <li th:each="sivunumero: ${sivunumerot}">
+                <a th:href="${'/alue/' + alue.id + '/keskustelu/' + keskustelu.id + '?sivu=' + sivunumero}"> <span th:text="${sivunumero}">Sivunumero</span></a>
+            </li>
+        </ul>
+
+        <p></p>
+        <a th:href="${'/alue/' + alue.id + '/keskustelu/' + keskustelu.id}">Näytä keskustelun kaikki viestit</a>
         <p></p>
         <a th:href="${'/alue/' + alue.id}">Palaa alueen sivulle</a>
         <a href="/">Palaa etusivulle</a>
