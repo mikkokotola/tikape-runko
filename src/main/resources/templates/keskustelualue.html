@@ -69,6 +69,20 @@
             </tr>
             
         </table>
+        
+        <p>Lisää uusi keskustelunavaus:</p>
+       
+        <form method="POST" action="/lisaakeskustelu">
+            <p>Otsikko:</p>;
+            <input type="text" name="otsikko"/>
+            <p>Viesti:</p>;
+            <textarea rows="4" cols="50" name="runko"/>
+            <p>Käyttäjä:</p>;
+            <input type="text" name="kayttaja"/>
+            <br></br>
+            <input type="hidden" name="alue" th:value="${alue.id}"/> 
+            <input type="submit" value="Lähetä"/>
+        </form>
 
         <a href="/">palaa etusivulle</a>
     </body>
