@@ -129,7 +129,6 @@ public class Main {
             return "";
         });
 
-        
         // Uuden alueen lisääminen postilla.
         post("/lisaaalue", (req, res) -> {
             String alue = req.queryParams("alueennimi");
@@ -139,12 +138,12 @@ public class Main {
             //ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
 
             keskustelualueDao.addKeskustelualue(alue);
-            
+
             res.redirect("/");
             return "";
         }
         );
-        
+
         // KESKEN
         // Uuden keskustelun lisääminen postilla.
         post("/lisaakeskustelu", (req, res) -> {
@@ -155,15 +154,27 @@ public class Main {
 
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
-        
+            ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
+
             keskusteluDao.addKeskustelu(alue, otsikko);
-            
-            // Vielä pitäisi saada se viesti lisättyä tuolle kyseiselle alueelle. Eli tarvitaan juuri kyseisen alueen id - miten haetaan?
-            res.redirect("/alue/" + alue);
+            List<Keskustelu> keskustelulista = keskusteluDao.findAll();
+
+            // Etsitään juuri lisätyn keskustelun id.
+            int keskustelunId = 999;
+            for (int i = 0; i < keskustelulista.size(); i++) {
+                if (keskustelulista.get(i).getNimi().equals(otsikko)) {
+                    keskustelunId = keskustelulista.get(i).getId();
+                }
+            }
+
+            // Lisätään viesti juuri lisättyyn keskusteluun.
+            viestiDao.addViesti(keskustelunId, kayttaja, runko);
+
+            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelunId);
             return "";
         }
         );
-        
+
         // Uuden viestin lisääminen postilla.
         post("/lisaaviesti", (req, res) -> {
             int alue = Integer.parseInt(req.queryParams("alue"));
