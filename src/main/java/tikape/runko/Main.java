@@ -28,7 +28,7 @@ public class Main {
         }
 
         // käytetään oletuksena paikallista sqlite-tietokantaa
-        String jdbcOsoite = "jdbc:sqlite:foorumi.db";
+        String jdbcOsoite = "jdbc:sqlite:Foorumi.db";
 
         // jos heroku antaa käyttöömme tietokantaosoitteen, otetaan se käyttöön
         if (System.getenv(
