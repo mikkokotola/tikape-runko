@@ -97,12 +97,12 @@ public class KeskustelualueDao implements Dao<Keskustelualue, Integer> {
         return alueet;
     }
 
-    @Override
-    public void add(Integer key) throws SQLException {
+    
+    public void addKeskustelualue(String nimi) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelualue VALUES (?, ?)");
-        stmt.setInt(1, key);
-        stmt.setString(2, "nimi_keskustelualue");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelualue(nimi_keskustelualue) VALUES (?)");
+        stmt.setString(1, nimi);
+        stmt.execute();
         stmt.close();
         connection.close();
 

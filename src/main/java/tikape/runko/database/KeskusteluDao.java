@@ -32,13 +32,14 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
 
         while (rs.next()) {
             Integer id = rs.getInt("id_keskustelu");
+            int keskustelualue = rs.getInt("keskustelualue");
             String nimi = rs.getString("nimi_keskustelu");
 
-            Keskustelu k = new Keskustelu(id, nimi);
+            Keskustelu k = new Keskustelu(id, keskustelualue, nimi);
 
             keskustelut.add(k);
 
-            int keskustelualue = rs.getInt("keskustelualue");
+            
             if (!keskustelunkeskustelualue.containsKey(keskustelualue)) {
                 keskustelunkeskustelualue.put(keskustelualue, new ArrayList<>());
             }
@@ -50,7 +51,7 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         connection.close();
         for (Keskustelualue kealue : this.keskustelualueDao.findAllIn(keskustelunkeskustelualue.keySet())) {
             for (Keskustelu keskustelu : keskustelunkeskustelualue.get(kealue.getId())) {
-                keskustelu.setKeskustelualue(kealue);
+                keskustelu.setKeskustelualue(kealue.getId());
             }
 
         }
@@ -81,11 +82,12 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         List<Keskustelu> keskustelut = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id_keskustelu");
+            int keskustelualue = rs.getInt("keskustelualue");
             String nimi = rs.getString("nimi_keskustelu");
-            Keskustelu k = new Keskustelu(id, nimi);
+            Keskustelu k = new Keskustelu(id, keskustelualue, nimi);
 
             keskustelut.add(k);
-            int keskustelualue = rs.getInt("keskustelualue");
+            
             if (!keskustelunkeskustelualue.containsKey(keskustelualue)) {
                 keskustelunkeskustelualue.put(keskustelualue, new ArrayList<>());
             }
@@ -97,7 +99,7 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
         connection.close();
         for (Keskustelualue kealue : this.keskustelualueDao.findAllIn(keskustelunkeskustelualue.keySet())) {
             for (Keskustelu keskustelu : keskustelunkeskustelualue.get(kealue.getId())) {
-                keskustelu.setKeskustelualue(kealue);
+                keskustelu.setKeskustelualue(kealue.getId());
             }
 
         }
@@ -118,29 +120,29 @@ public class KeskusteluDao implements Dao<Keskustelu, Integer> {
             return null;
         }
         Integer id = rs.getInt("id_keskustelu");
+        Integer alue = rs.getInt("keskustelualue");
         String nimi = rs.getString("nimi_keskustelu");
 
-        Keskustelu k = new Keskustelu(id, nimi);
+        Keskustelu k = new Keskustelu(id, alue, nimi);
 
-        Integer alue = rs.getInt("keskustelualue");
+        
 
         rs.close();
         stmt.close();
         connection.close();
-        k.setKeskustelualue(this.keskustelualueDao.findOne(alue));
+        
 
         return k;
 
     }
 
-    @Override
-    public void add(Integer key) throws SQLException {
+    
+    public void addKeskustelu(int alue, String nimi) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelu VALUES (?, ?, ?)");
-        stmt.setInt(1, key);
-        stmt.setObject(2, "keskustelualue");
-        stmt.setString(3, "nimi_keskustelualue");
-
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES (?, ?)");
+        stmt.setInt(1, alue);
+        stmt.setString(2, nimi);
+        stmt.execute();
         stmt.close();
         connection.close();
 

@@ -40,7 +40,6 @@ public class Main {
 
         db.init();
 
-        // Haetaan kaikki keskustelualueet.
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
             List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
@@ -117,7 +116,7 @@ public class Main {
         // Tämä on vaihtoehtoinen uuden viestin lisäävän postin toteutus, ei käytössä tällä hetkellä.
         post("/alue/:id_keskustelualue/keskustelu/:id_keskustelu/lisaaviesti", (req, res) -> {
             String alue = req.params("id_keskustelualue");
-            String keskustelu = req.params("id_keskustelu");
+//             keskustelu = req.params(Integer.parseInt("keskustelu"));
             String kayttaja = req.queryParams("kayttaja");
             String runko = req.queryParams("viestinrunko");
 
@@ -125,18 +124,17 @@ public class Main {
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
             ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
 
-            viestiDao.addViesti(keskustelu, kayttaja, runko);
-
-            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelu);
+//            viestiDao.addViesti(keskustelu, kayttaja, runko);
+//            res.redirect("/alue/" + alue + "/keskustelu/" + keskustelu);
             return "";
         });
 
         // Uuden viestin lisääminen postilla.
         post("/lisaaviesti", (req, res) -> {
-            String alue = req.queryParams("alue");
-            String keskustelu = req.queryParams("keskustelu");
+            int alue = Integer.parseInt(req.queryParams("keskustelualue"));
+            int keskustelu = Integer.parseInt(req.queryParams("keskustelu"));
             String kayttaja = req.queryParams("kayttaja");
-            String runko = req.queryParams("viestinrunko");
+            String runko = req.queryParams("runko");
 
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
@@ -163,12 +161,12 @@ public class Main {
         List<Viesti> kaikkiViestit = viestiDao.findAll();
         for (Keskustelualue ka : keskustelualuelista) {
             for (Keskustelu k : kaikkiKeskustelut) {
-                if (k.getKeskustelualue().getId() == ka.getId()) {
+                if (k.getKeskustelualue() == ka.getId()) {
                     ka.addKeskustelu(k);
                 }
                 // Lisätän keskusteluihin niihin kuuluvat viestit
                 for (Viesti v : kaikkiViestit) {
-                    if (v.getKeskustelu().getId() == k.getId()) {
+                    if (v.getKeskustelu() == k.getId()) {
                         k.addViesti(v);
                     }
 

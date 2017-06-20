@@ -7,13 +7,14 @@ import java.util.List;
 public class Keskustelu {
 
     private int id_keskustelu;
-    private Keskustelualue keskustelualue;
+    private int keskustelualue;
     private String nimi_keskustelu;
     private List<Viesti> viestit;
 
-    public Keskustelu(int id, String nimi) {
+    public Keskustelu(int id, int keskustelualue, String nimi) {
 
         this.id_keskustelu = id;
+        this.keskustelualue = keskustelualue;
         this.nimi_keskustelu = nimi;
         this.viestit = new ArrayList<>();
     }
@@ -34,11 +35,11 @@ public class Keskustelu {
         this.id_keskustelu = id;
     }
 
-    public Keskustelualue getKeskustelualue() {
+    public int getKeskustelualue() {
         return keskustelualue;
     }
 
-    public void setKeskustelualue(Keskustelualue keskustelualue) {
+    public void setKeskustelualue(int keskustelualue) {
         this.keskustelualue = keskustelualue;
     }
 

@@ -1,10 +1,13 @@
 package tikape.runko.database;
 
+import static java.lang.String.valueOf;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import static java.sql.Timestamp.valueOf;
+import static java.sql.Timestamp.valueOf;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,18 +40,19 @@ public class ViestiDao implements Dao<Viesti, Integer> {
             return null;
         }
         Integer id = rs.getInt("id_viesti");
+        int keskustelu = rs.getInt("keskustelu");
         String kayttaja = rs.getString("kayttaja");
         String runko = rs.getString("runko");
         Timestamp viestinaika = rs.getTimestamp("viestinaika");
 
-        Viesti v = new Viesti(id, kayttaja, runko, viestinaika);
+        Viesti v = new Viesti(id, keskustelu, kayttaja, runko, viestinaika);
 
-        Integer keskustelu = rs.getInt("keskustelu");
+        
 
         rs.close();
         stmt.close();
         connection.close();
-        v.setKeskustelu(this.keskusteluDao.findOne(keskustelu));
+        
 
         return v;
 
@@ -67,12 +71,13 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         while (rs.next()) {
 
             Integer id = rs.getInt("id_viesti");
+            int keskustelu = rs.getInt("keskustelu");
             String kayttaja = rs.getString("kayttaja");
             String runko = rs.getString("runko");
-            Timestamp viestinaika = rs.getTimestamp("viestinaika");
-            Viesti v = new Viesti(id, kayttaja, runko, viestinaika);
+            Timestamp viestinaika = Timestamp.valueOf(rs.getString("viestinaika"));
+            Viesti v = new Viesti(id, keskustelu, kayttaja, runko, viestinaika);
             viestit.add(v);
-            int keskustelu = rs.getInt("keskustelu");
+            
             if (!keskustelunViestit.containsKey(keskustelu)) {
                 keskustelunViestit.put(keskustelu, new ArrayList<>());
             }
@@ -84,7 +89,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         connection.close();
         for (Keskustelu ke : this.keskusteluDao.findAllIn(keskustelunViestit.keySet())) {
             for (Viesti viesti : keskustelunViestit.get(ke.getId())) {
-                viesti.setKeskustelu(ke);
+                viesti.setKeskustelu(ke.getId());
             }
 
         }
@@ -119,11 +124,11 @@ public class ViestiDao implements Dao<Viesti, Integer> {
             int id = rs.getInt("id_viesti");
             String kayttaja = rs.getString("kayttaja");
             String runko = rs.getString("runko");
+            int keskustelu = rs.getInt("keskustelu");
             Timestamp viestinaika = rs.getTimestamp("viestinaika");
-            Viesti v = new Viesti(id, kayttaja, runko, viestinaika);
+            Viesti v = new Viesti(id, keskustelu, kayttaja, runko, viestinaika);
             viestit.add(v);
 
-            int keskustelu = rs.getInt("keskustelu");
             if (!viestinkeskustelu.containsKey(keskustelu)) {
                 viestinkeskustelu.put(keskustelu, new ArrayList<>());
             }
@@ -135,7 +140,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         connection.close();
         for (Keskustelu ke : this.keskusteluDao.findAllIn(viestinkeskustelu.keySet())) {
             for (Viesti viesti : viestinkeskustelu.get(ke.getId())) {
-                viesti.setKeskustelu(ke);
+                viesti.setKeskustelu(ke.getId());
             }
 
         }
@@ -143,34 +148,18 @@ public class ViestiDao implements Dao<Viesti, Integer> {
         return viestit;
     }
 
-    @Override
-    public void add(Integer key) throws SQLException {
-        
-        
-        Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti VALUES (?, ?, ?, ?, ?)");
-        stmt.setInt(1, key);
-        stmt.setObject(2, "keskustelu");
-        stmt.setString(3, "kayttaja");
-        stmt.setString(4, "runko");
-        stmt.setObject(5, "viestinaika");
 
-        stmt.close();
-        connection.close();
-
-    }
     
-    public void addViesti(String keskustelu, String kayttaja, String runko) throws SQLException {
+    public void addViesti(int keskustelu, String kayttaja, String runko) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES (?, ?, ?, ?)");
-        stmt.setObject(1, keskustelu );
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES (?, ?, ?, datetime())");
+        stmt.setInt(1, keskustelu );
         stmt.setString(2, kayttaja);
         stmt.setString(3, runko);
-        stmt.setObject(4, "NOW()");
+//        stmt.setObject(4, "");
 
-        ResultSet rs = stmt.executeQuery();
+        stmt.execute();
         
-        rs.close();
         stmt.close();
         connection.close();
 

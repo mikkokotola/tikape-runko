@@ -6,15 +6,16 @@ import java.sql.Timestamp;
 public class Viesti {
     
     private int id_viesti;
-    private Keskustelu keskustelu;
+    private int keskustelu;
     private String kayttaja;
     private String runko;
     private Timestamp viestinaika;
     
 
-    public Viesti(int id, String kayttaja, String runko, Timestamp viestinaika) {
+    public Viesti(int id, int keskustelu, String kayttaja, String runko, Timestamp viestinaika) {
         
         this.id_viesti = id;
+        this.keskustelu = keskustelu;
         this.kayttaja=kayttaja;
         this.runko=runko;
         this.viestinaika=viestinaika;
@@ -29,11 +30,11 @@ public class Viesti {
         this.id_viesti = id;
     }
 
-    public Keskustelu getKeskustelu() {
+    public int getKeskustelu() {
         return keskustelu;
     }
 
-    public void setKeskustelu(Keskustelu keskustelu) {
+    public void setKeskustelu(int keskustelu) {
         this.keskustelu = keskustelu;
     }
 

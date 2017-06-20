@@ -73,8 +73,7 @@ public class Database {
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Biologia');");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Sosiologia');");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Matematiikka');");
-        lista.add("INSERT INTO Keskustelu (id_keskustelu, keskustelualue, nimi_keskustelu) VALUES (1, (SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Tietojenkasittely'), 'Kapistely on kivaa');");
-        
+        lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Tietojenkasittely'), 'Kapistely on kivaa');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Tietojenkasittely'), 'Kapistely on kivaa');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Tietojenkasittely'), 'Tikape');");
         lista.add("INSERT INTO Keskustelu (keskustelualue, nimi_keskustelu) VALUES ((SELECT id_keskustelualue FROM Keskustelualue WHERE nimi_keskustelualue = 'Tietojenkasittely'),'Ohpe');");
