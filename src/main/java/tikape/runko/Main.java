@@ -3,6 +3,7 @@ package tikape.runko;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import spark.ModelAndView;
@@ -18,7 +19,7 @@ import tikape.runko.domain.Keskustelualue;
 import tikape.runko.domain.Viesti;
 
 public class Main {
-
+    
     public static void main(String[] args) throws Exception {
 
 // Portin määritys Herokua varten, lisätty TiKaPe-materiaalin ohjeen mukaan.
@@ -35,17 +36,17 @@ public class Main {
                 "DATABASE_URL") != null) {
             jdbcOsoite = System.getenv("DATABASE_URL");
         }
-
+        
         Database db = new Database(jdbcOsoite);
-
+        
         db.init();
-
+        
         get("/", (req, res) -> {
             HashMap map = new HashMap<>();
             List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
-
+            
             map.put("alueet", keskustelualuelista);
-
+            
             return new ModelAndView(map, "index");
         },
                 new ThymeleafTemplateEngine()
@@ -56,21 +57,32 @@ public class Main {
                 "/alue/:id_keskustelualue", (req, res) -> {
                     HashMap map = new HashMap<>();
                     String id_keskustelualue = req.params("id_keskustelualue");
-
+                    
                     List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
                     int valittavaAlueIndex = 0;
-
+                    
                     for (int i = 0; i < keskustelualuelista.size(); i++) {
                         if (keskustelualuelista.get(i).getId() == Integer.parseInt(id_keskustelualue)) {
                             valittavaAlueIndex = i;
                         }
                     }
-
+                    
                     List<Keskustelu> alueenKeskustelut = keskustelualuelista.get(valittavaAlueIndex).getKeskustelut();
 
-                    map.put("keskustelut", alueenKeskustelut);
-                    map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
+                    // Järjestetään käänteiseen aikajärjestykseen (uusimmasta vanhimpaan) keskustelun uusimman viestin aikaleiman perusteella.
+                    Collections.sort(alueenKeskustelut, (o2, o1) -> o1.getViimeisimmanViestinAika().compareTo(o2.getViimeisimmanViestinAika()));
 
+                    // Poimitaan näytettäväksi kymmenen viimeisintä.
+                    List<Keskustelu> alueenKeskustelutViimeisimmat10 = new ArrayList<>();
+                    for (int i = 0; i < alueenKeskustelut.size(); i++) {
+                        if (i < 10) {
+                            alueenKeskustelutViimeisimmat10.add(alueenKeskustelut.get(i));
+                        }
+                    }
+                    
+                    map.put("keskustelut", alueenKeskustelutViimeisimmat10);
+                    map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
+                    
                     return new ModelAndView(map, "keskustelualue");
                 },
                 new ThymeleafTemplateEngine()
@@ -82,32 +94,32 @@ public class Main {
                     HashMap map = new HashMap<>();
                     String id_keskustelualue = req.params("id_keskustelualue");
                     String id_keskustelu = req.params("id_keskustelu");
-
+                    
                     List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
                     int valittavaAlueIndex = 0;
-
+                    
                     for (int i = 0; i < keskustelualuelista.size(); i++) {
                         if (keskustelualuelista.get(i).getId() == Integer.parseInt(id_keskustelualue)) {
                             valittavaAlueIndex = i;
                         }
                     }
-
+                    
                     List<Keskustelu> alueenKeskustelut = keskustelualuelista.get(valittavaAlueIndex).getKeskustelut();
-
+                    
                     int valittavaKeskusteluIndex = 0;
-
+                    
                     for (int i = 0; i < alueenKeskustelut.size(); i++) {
                         if (alueenKeskustelut.get(i).getId() == Integer.parseInt(id_keskustelu)) {
                             valittavaKeskusteluIndex = i;
                         }
                     }
-
+                    
                     List<Viesti> keskustelunViestit = alueenKeskustelut.get(valittavaKeskusteluIndex).getViestit();
-
+                    
                     map.put("viestit", keskustelunViestit);
                     map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
                     map.put("keskustelu", alueenKeskustelut.get(valittavaKeskusteluIndex));
-
+                    
                     return new ModelAndView(map, "keskustelu");
                 },
                 new ThymeleafTemplateEngine()
@@ -119,7 +131,7 @@ public class Main {
 //             keskustelu = req.params(Integer.parseInt("keskustelu"));
             String kayttaja = req.queryParams("kayttaja");
             String runko = req.queryParams("viestinrunko");
-
+            
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
             ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
@@ -132,13 +144,13 @@ public class Main {
         // Uuden alueen lisääminen postilla.
         post("/lisaaalue", (req, res) -> {
             String alue = req.queryParams("alueennimi");
-
+            
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             //KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
             //ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
 
             keskustelualueDao.addKeskustelualue(alue);
-
+            
             res.redirect("/");
             return "";
         }
@@ -151,11 +163,11 @@ public class Main {
             String kayttaja = req.queryParams("kayttaja");
             String otsikko = req.queryParams("otsikko");
             String runko = req.queryParams("runko");
-
+            
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
             ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
-
+            
             keskusteluDao.addKeskustelu(alue, otsikko);
             List<Keskustelu> keskustelulista = keskusteluDao.findAll();
 
@@ -169,7 +181,7 @@ public class Main {
 
             // Lisätään viesti juuri lisättyyn keskusteluun.
             viestiDao.addViesti(keskustelunId, kayttaja, runko);
-
+            
             res.redirect("/alue/" + alue + "/keskustelu/" + keskustelunId);
             return "";
         }
@@ -181,21 +193,21 @@ public class Main {
             int keskustelu = Integer.parseInt(req.queryParams("keskustelu"));
             String kayttaja = req.queryParams("kayttaja");
             String runko = req.queryParams("runko");
-
+            
             KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
             KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
             ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
-
+            
             viestiDao.addViesti(keskustelu, kayttaja, runko);
-
+            
             res.redirect("/alue/" + alue + "/keskustelu/" + keskustelu);
             return "";
         }
         );
     }
-
+    
     public static List<Keskustelualue> luoKeskustelut(Database db) throws SQLException {
-
+        
         KeskustelualueDao keskustelualueDao = new KeskustelualueDao(db);
         KeskusteluDao keskusteluDao = new KeskusteluDao(db, keskustelualueDao);
         ViestiDao viestiDao = new ViestiDao(db, keskusteluDao);
@@ -215,11 +227,11 @@ public class Main {
                     if (v.getKeskustelu() == k.getId()) {
                         k.addViesti(v);
                     }
-
+                    
                 }
             }
         }
         return keskustelualuelista;
     }
-
+    
 }

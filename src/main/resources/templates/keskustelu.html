@@ -65,10 +65,10 @@
 
         <p class="keskita"> Vastaa keskusteluun: </p>
        
-        <form method="POST" action="/lisaaviesti">
-            <p>Viesti:</p>;
+        <form class="keskita" method="POST" action="/lisaaviesti">
+            <p>Viesti:</p>
             <textarea rows="4" cols="50" name="runko"/>
-            <p>Käyttäjä:</p>;
+            <p>Käyttäjä:</p>
             <input type="text" name="kayttaja"/>
             <br></br>
             <input type="hidden" name="alue" th:value="${alue.id}"/> 

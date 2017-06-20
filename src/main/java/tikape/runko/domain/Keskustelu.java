@@ -87,7 +87,7 @@ public class Keskustelu {
 
             return viimeisin.toString();
         } else {
-            return "Ei kirjattuja viestejä.";
+            return "";
         }
     }
 }

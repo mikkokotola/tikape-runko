@@ -90,10 +90,10 @@ public class Keskustelualue {
 
                 return viimeisin.toString();
             } else {
-                return "Ei kirjattuja viestejä.";
+                return "";
             }
         } else {
-            return "Ei kirjattuja viestejä.";
+            return "";
         }
 
     }
