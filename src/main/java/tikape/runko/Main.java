@@ -45,6 +45,9 @@ public class Main {
             HashMap map = new HashMap<>();
             List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
             
+            // Järjestetään lista aakkosjärjestykseen.
+            Collections.sort(keskustelualuelista, (o1, o2) -> o1.getNimi().compareTo(o2.getNimi()));
+            
             map.put("alueet", keskustelualuelista);
             
             return new ModelAndView(map, "index");
@@ -52,7 +55,7 @@ public class Main {
                 new ThymeleafTemplateEngine()
         );
 
-        // Haetaan tietyn keskustelualueen keskustelut.
+        // Haetaan tietyn keskustelualueen keskustelut, näytetään vain kymmenen viimeksi aktiivista.
         get(
                 "/alue/:id_keskustelualue", (req, res) -> {
                     HashMap map = new HashMap<>();
@@ -88,6 +91,34 @@ public class Main {
                 new ThymeleafTemplateEngine()
         );
 
+        // Haetaan tietyn keskustelualueen keskustelut, näytetään kaikki
+        get(
+                "/alue/:id_keskustelualue/all", (req, res) -> {
+                    HashMap map = new HashMap<>();
+                    String id_keskustelualue = req.params("id_keskustelualue");
+                    
+                    List<Keskustelualue> keskustelualuelista = luoKeskustelut(db);
+                    int valittavaAlueIndex = 0;
+                    
+                    for (int i = 0; i < keskustelualuelista.size(); i++) {
+                        if (keskustelualuelista.get(i).getId() == Integer.parseInt(id_keskustelualue)) {
+                            valittavaAlueIndex = i;
+                        }
+                    }
+                    
+                    List<Keskustelu> alueenKeskustelut = keskustelualuelista.get(valittavaAlueIndex).getKeskustelut();
+
+                    // Järjestetään käänteiseen aikajärjestykseen (uusimmasta vanhimpaan) keskustelun uusimman viestin aikaleiman perusteella.
+                    Collections.sort(alueenKeskustelut, (o2, o1) -> o1.getViimeisimmanViestinAika().compareTo(o2.getViimeisimmanViestinAika()));
+
+                    map.put("keskustelut", alueenKeskustelut);
+                    map.put("alue", keskustelualuelista.get(valittavaAlueIndex));
+                    
+                    return new ModelAndView(map, "keskustelualue");
+                },
+                new ThymeleafTemplateEngine()
+        );
+        
         // Haetaan tietyn keskustelun viestit.
         get(
                 "/alue/:id_keskustelualue/keskustelu/:id_keskustelu", (req, res) -> {

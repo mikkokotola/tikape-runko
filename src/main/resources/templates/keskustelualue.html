@@ -84,6 +84,10 @@
             <input type="submit" value="Lähetä"/>
         </form>
 
-        <a href="/">palaa etusivulle</a>
+        <p><a th:href="${'/alue/' + alue.id}">Näytä alueen 10 viimeksi päivitettyä keskustelua</a></p>
+        <p><a th:href="${'/alue/' + alue.id + '/all'}">Näytä alueen kaikki keskustelut</a></p>
+        <p></p>
+        <p><a href="/">palaa etusivulle</a></p>
+        
     </body>
 </html>
