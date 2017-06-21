@@ -62,9 +62,10 @@ public class Database {
         ArrayList<String> lista = new ArrayList<>();
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        lista.add("DROP TABLE Keskustelualue;");
-        lista.add("DROP TABLE Keskustelu;");
-        lista.add("DROP TABLE Viesti;");
+        // POISTETTU VÄLIAIKAISESTI Drop table-lauseet - aiheuttavat erroria Herokussa.
+        //lista.add("DROP TABLE Keskustelualue;");
+        //lista.add("DROP TABLE Keskustelu;");
+        //lista.add("DROP TABLE Viesti;");
         
         // heroku käyttää SERIAL-avainsanaa uuden tunnuksen automaattiseen luomiseen
         lista.add("CREATE TABLE Keskustelualue (id_keskustelualue SERIAL PRIMARY KEY, nimi_keskustelualue varchar(200));");
