@@ -152,7 +152,7 @@ public class ViestiDao implements Dao<Viesti, Integer> {
     
     public void addViesti(int keskustelu, String kayttaja, String runko) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES (?, ?, ?, datetime())");
+        PreparedStatement stmt = connection.prepareStatement("INSERT INTO Viesti (keskustelu, kayttaja, runko, viestinaika) VALUES (?, ?, ?, now())");
         stmt.setInt(1, keskustelu );
         stmt.setString(2, kayttaja);
         stmt.setString(3, runko);
