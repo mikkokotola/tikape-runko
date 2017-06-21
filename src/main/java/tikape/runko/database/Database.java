@@ -69,7 +69,7 @@ public class Database {
         
         // heroku käyttää SERIAL-avainsanaa uuden tunnuksen automaattiseen luomiseen
         lista.add("CREATE TABLE Keskustelualue (id_keskustelualue SERIAL PRIMARY KEY, nimi_keskustelualue varchar(200));");
-        lista.add("CREATE TABLE Keskustelu (id_keskustelu SERIAL PRIMARY KEY, keskustelualue SERIAL REFERENCES Keskustelualue(id_keskustelualue), nimi_keskustelu);");
+        lista.add("CREATE TABLE Keskustelu (id_keskustelu SERIAL PRIMARY KEY, keskustelualue SERIAL REFERENCES Keskustelualue(id_keskustelualue), nimi_keskustelu varchar(200);");
         lista.add("CREATE TABLE Viesti (id_viesti SERIAL PRIMARY KEY, keskustelu SERIAL REFERENCES Keskustelu(id_keskustelu), kayttaja varchar(200), runko varchar(1000), viestinaika timestamp);");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Tietojenkasittely');");
         lista.add("INSERT INTO Keskustelualue (nimi_keskustelualue) VALUES ('Biologia');");
