@@ -63,7 +63,7 @@ public class Database {
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
         // POISTETTU VÄLIAIKAISESTI Drop table-lauseet - aiheuttavat erroria Herokussa.
-        //lista.add("DROP TABLE Keskustelualue;");
+        lista.add("DROP TABLE Keskustelualue;");
         //lista.add("DROP TABLE Keskustelu;");
         //lista.add("DROP TABLE Viesti;");
         
